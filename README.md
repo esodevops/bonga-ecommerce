@@ -1,3 +1,5 @@
+[![Bonga Data Load Pipeline](https://github.com/esodevops/bonga-ecommerce/actions/workflows/load-data-pipeline.yml/badge.svg)](https://github.com/esodevops/bonga-ecommerce/actions/workflows/load-data-pipeline.yml)
+
 # Bonga Ecommerce Data Pipeline 
 
 This project loads ecommerce CSV datasets into PostgreSQL using a repeatable pipeline.
