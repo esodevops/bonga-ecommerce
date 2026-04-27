@@ -1,0 +1,8 @@
+.env
+.env.dev
+.env.production
+.DS_Store
+NOTE.md 
+
+# Keep demo seed data in data/raw tracked; ignore private datasets.
+data/private/
