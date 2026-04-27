@@ -1,0 +1,56 @@
+name: Bonga Data Load Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  load-and-validate:
+    runs-on: ubuntu-latest
+    env:
+      CI_POSTGRES_DB: ${{ secrets.CI_POSTGRES_DB }}
+      CI_POSTGRES_USER: ${{ secrets.CI_POSTGRES_USER }}
+      CI_POSTGRES_PASSWORD: ${{ secrets.CI_POSTGRES_PASSWORD }}
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: ${{ secrets.CI_POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.CI_POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.CI_POSTGRES_PASSWORD }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ${{ secrets.CI_POSTGRES_USER }} -d ${{
+          secrets.CI_POSTGRES_DB }}" --health-interval 10s --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Create schema
+        env:
+          PGPASSWORD: ${{ env.CI_POSTGRES_PASSWORD }}
+        run: psql -h localhost -U "$CI_POSTGRES_USER" -d "$CI_POSTGRES_DB" -f
+          sql/01_schema.sql
+
+      - name: Load CSV datasets
+        env:
+          PGPASSWORD: ${{ env.CI_POSTGRES_PASSWORD }}
+        run: |
+          psql -h localhost -U "$CI_POSTGRES_USER" -d "$CI_POSTGRES_DB" -c "\\copy products(product_id,name,price,category) FROM 'data/raw/products.csv' WITH (FORMAT csv, HEADER true);"
+          psql -h localhost -U "$CI_POSTGRES_USER" -d "$CI_POSTGRES_DB" -c "\\copy customers(customer_id,name,email) FROM 'data/raw/customers.csv' WITH (FORMAT csv, HEADER true);"
+          psql -h localhost -U "$CI_POSTGRES_USER" -d "$CI_POSTGRES_DB" -c "\\copy orders(order_id,customer_id,order_date) FROM 'data/raw/orders.csv' WITH (FORMAT csv, HEADER true);"
+          psql -h localhost -U "$CI_POSTGRES_USER" -d "$CI_POSTGRES_DB" -c "\\copy orderitems(order_item_id,order_id,product_id,quantity) FROM 'data/raw/orderitems.csv' WITH (FORMAT csv, HEADER true);"
+
+      - name: Validate row counts and relationships
+        env:
+          PGPASSWORD: ${{ env.CI_POSTGRES_PASSWORD }}
+        run: psql -h localhost -U "$CI_POSTGRES_USER" -d "$CI_POSTGRES_DB" -f
+          sql/03_validate.sql
