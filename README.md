@@ -1,4 +1,4 @@
-# Bonga Ecommerce Data Pipeline (Beginner Friendly + Production Ready)
+# Bonga Ecommerce Data Pipeline 
 
 This project loads ecommerce CSV datasets into PostgreSQL using a repeatable pipeline.
 
