@@ -51,7 +51,7 @@ jobs:
           psql -h localhost -U "$CI_POSTGRES_USER" -d "$CI_POSTGRES_DB" -c "\\copy products(product_id,name,price,category) FROM 'data/raw/products.csv' WITH (FORMAT csv, HEADER true);"
           psql -h localhost -U "$CI_POSTGRES_USER" -d "$CI_POSTGRES_DB" -c "\\copy customers(customer_id,name,email) FROM 'data/raw/customers.csv' WITH (FORMAT csv, HEADER true);"
           psql -h localhost -U "$CI_POSTGRES_USER" -d "$CI_POSTGRES_DB" -c "\\copy orders(order_id,customer_id,order_date) FROM 'data/raw/orders.csv' WITH (FORMAT csv, HEADER true);"
-          psql -h localhost -U "$CI_POSTGRES_USER" -d "$CI_POSTGRES_DB" -c "\\copy orderitems(order_item_id,order_id,product_id,quantity) FROM 'data/raw/orderitems.csv' WITH (FORMAT csv, HEADER true);"
+          psql -h localhost -U "$CI_POSTGRES_USER" -d "$CI_POSTGRES_DB" -c "\\copy order_items(order_item_id,order_id,product_id,quantity) FROM 'data/raw/order_items.csv' WITH (FORMAT csv, HEADER true);"
 
       - name: Validate row counts and relationships
         env:

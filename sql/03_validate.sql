@@ -20,10 +20,10 @@ FROM
 UNION
 ALL
 SELECT
-    'orderitems' AS table_name,
+    'order_items' AS table_name,
     COUNT(*) AS row_count
 FROM
-    orderitems
+    order_items
 ORDER BY
     table_name;
 
@@ -36,17 +36,17 @@ WHERE
     c.customer_id IS NULL;
 
 SELECT
-    COUNT(*) AS orphan_orderitem_order_rows
+    COUNT(*) AS orphan_order_item_order_rows
 FROM
-    orderitems oi
+    order_items oi
     LEFT JOIN orders o ON o.order_id = oi.order_id
 WHERE
     o.order_id IS NULL;
 
 SELECT
-    COUNT(*) AS orphan_orderitem_product_rows
+    COUNT(*) AS orphan_order_item_product_rows
 FROM
-    orderitems oi
+    order_items oi
     LEFT JOIN products p ON p.product_id = oi.product_id
 WHERE
     p.product_id IS NULL;

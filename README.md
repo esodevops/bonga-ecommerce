@@ -18,11 +18,9 @@ This project loads ecommerce CSV datasets into PostgreSQL using a repeatable pip
 - `sql/01_schema.sql`: creates tables and indexes
 - `sql/02_load_data.sql`: truncates and reloads data from CSV
 - `sql/03_validate.sql`: verifies row counts and referential integrity
-- `sql/legacy/ddl.sql`: original starter DDL script
 - `scripts/run_pipeline.sh`: one-command local pipeline runner
 - `docker-compose.yml`: local PostgreSQL service
 - `.github/workflows/load-data-pipeline.yml`: CI pipeline
-- `docs/images/`: reference screenshots and assets
 
 ## Entity Relationship Diagram (ERD)
 
@@ -44,10 +42,10 @@ erDiagram
   ORDERS {
     INT order_id PK
     INT customer_id FK
-    DATE order_date
+    TIMESTAMP order_date
   }
 
-  ORDERITEMS {
+  ORDER_ITEMS {
     INT order_item_id PK
     INT order_id FK
     INT product_id FK
@@ -55,8 +53,8 @@ erDiagram
   }
 
   CUSTOMERS ||--o{ ORDERS : places
-  ORDERS ||--o{ ORDERITEMS : contains
-  PRODUCTS ||--o{ ORDERITEMS : includes
+  ORDERS ||--o{ ORDER_ITEMS : contains
+  PRODUCTS ||--o{ ORDER_ITEMS : includes
 ```
 
 ## Prerequisites

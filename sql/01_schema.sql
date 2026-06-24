@@ -14,10 +14,10 @@ CREATE TABLE IF NOT EXISTS customers (
 CREATE TABLE IF NOT EXISTS orders (
     order_id INT PRIMARY KEY,
     customer_id INT NOT NULL REFERENCES customers(customer_id),
-    order_date DATE NOT NULL
+    order_date TIMESTAMP NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS orderitems (
+CREATE TABLE IF NOT EXISTS order_items (
     order_item_id INT PRIMARY KEY,
     order_id INT NOT NULL REFERENCES orders(order_id),
     product_id INT NOT NULL REFERENCES products(product_id),
@@ -26,6 +26,6 @@ CREATE TABLE IF NOT EXISTS orderitems (
 
 CREATE INDEX IF NOT EXISTS idx_orders_customer_id ON orders(customer_id);
 
-CREATE INDEX IF NOT EXISTS idx_orderitems_order_id ON orderitems(order_id);
+CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON order_items(order_id);
 
-CREATE INDEX IF NOT EXISTS idx_orderitems_product_id ON orderitems(product_id);
+CREATE INDEX IF NOT EXISTS idx_order_items_product_id ON order_items(product_id);
